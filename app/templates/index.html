@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Upload Your 3D Print Image</h1>
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="image" required>
+    <button type="submit">Analyze</button>
+</form>
+{% endblock %}
