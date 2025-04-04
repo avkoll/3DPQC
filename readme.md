@@ -18,6 +18,4 @@ The primary goal of this tool is to enable users to upload images of their compl
 
 Each component of the project, including the Flask backend and individual CV models, runs in its own Docker container, managed with Docker Compose to ensure easy deployment and scalability.
 
-## Running the Project
-Detailed instructions for setting up and running the project will be provided soon.
 
