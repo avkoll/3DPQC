@@ -18,6 +18,8 @@ services:
     command: python stringing.py
     volumes:
       - ./app/static/uploads:/uploads
+    ports:
+      - "5001:5001"
 
   cv_model_layers:
     build: ./app/cv_models
