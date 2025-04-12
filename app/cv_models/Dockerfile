@@ -2,7 +2,10 @@ FROM python:3.12-slim
 
 WORKDIR /cv_models
 
-RUN pip install --no-cache-dir opencv-python numpy
+# Copy the local requirements file
+COPY cv_requirements.txt .
+
+RUN pip install --no-cache-dir -r cv_requirements.txt
 
 COPY . .
 
