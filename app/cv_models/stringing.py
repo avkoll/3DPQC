@@ -20,4 +20,9 @@ def detect_stringing():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-
+## placeholder logic to test communication
+    if img.shape[1] % 2 == 0:
+        result = {'defect': False, 'confidence': 0.9, 'message': "No stringing detected."}
+    else:
+        result = {'defect': True, 'confidence': 0.7, 'message': "Potential stringing detected."}
+    return jsonify(result)
