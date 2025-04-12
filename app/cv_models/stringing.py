@@ -26,3 +26,6 @@ def detect_stringing():
     else:
         result = {'defect': True, 'confidence': 0.7, 'message': "Potential stringing detected."}
     return jsonify(result)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=True)
