@@ -36,10 +36,12 @@ def detect_stringing():
     prob = 1.0 / (1.0 + np.exp(-score))      # >0.5 defect, <0.5 good
 
     result = {
-        'defect': score > 0,
-        'confidence': float(prob),
+        'defect': bool(score > 0),
+        'confidence': float(conf),
+        'probability': float(prob),
         'message': "Potential stringing detected." if score > 0 else "No stringing detected."
     }
+
     return jsonify(result)
 
 
