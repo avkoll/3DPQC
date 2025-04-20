@@ -26,11 +26,21 @@ def detect_stringing():
         return jsonify({'error': str(e)}), 400
 
 ## placeholder logic to test communication
-    if img.shape[1] % 2 == 0:
-        result = {'defect': False, 'confidence': 0.9, 'message': "No stringing detected."}
-    else:
-        result = {'defect': True, 'confidence': 0.7, 'message': "Potential stringing detected."}
+    # convert to grayscale + resize exactly as in training
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    small = cv2.resize(gray, (64, 128))
+    feat = hog.compute(small).flatten().astype(np.float32)
+    _, resp = svm.predict(feat.reshape(1, -1))
+    is_def = bool(int(resp[0, 0]))
+
+    # (optional) you can set confidence=1.0 for now or implement raw‑score extraction later
+    result = {
+        'defect': is_def,
+        'confidence': 1.0,
+        'message': "Potential stringing detected." if is_def else "No stringing detected."
+    }
     return jsonify(result)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
