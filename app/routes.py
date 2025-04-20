@@ -18,9 +18,15 @@ def index():
         img_path = os.path.join(UPLOAD_FOLDER, img.filename)
         img.save(img_path)
 
-        # Placeholder: image processing logic goes here
-        result = {"defects": []}
+        with open(img_path, 'rb') as f:
+            files = {'image': f}
+            try:
+                resp = requests.post(DETECT_URL, files=files, timeout=5)
+                resp.raise_for_status()
+            except requests.RequestException as e:
+                return jsonify({'error': 'Detection service error', 'details': str(e)}), 502
 
+        result = resp.json()
         return jsonify(result)
 
     return render_template('index.html')
