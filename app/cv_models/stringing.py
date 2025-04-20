@@ -1,8 +1,13 @@
-from flask import Flask, request, jsonify
+import os
 import cv2
 import numpy as np
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+
+MODEL_PATH = os.environ.get("MODEL_PATH", "../models/3dpqc_model.xml")
+svm        = cv2.ml.SVM_load(MODEL_PATH)
+hog        = cv2.HOGDescriptor()
 
 @app.route('/detect', methods=['POST'])
 
