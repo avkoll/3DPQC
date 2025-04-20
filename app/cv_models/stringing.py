@@ -25,7 +25,7 @@ def detect_stringing():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-## placeholder logic to test communication
+
     # convert to grayscale + resize exactly as in training
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     small = cv2.resize(gray, (64, 128))

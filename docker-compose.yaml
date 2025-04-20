@@ -16,10 +16,13 @@ services:
     build: ./app/cv_models
     container_name: cv_model_stringing
     command: python stringing.py
-    volumes:
-      - ./app/static/uploads:/uploads
     ports:
       - "5001:5001"
+    volumes:
+      - ./app/static/uploads:/uploads
+      - ./models/3dpqc_model.xml:/models/3dpqc_model.xml:ro
+    environment:
+      - MODEL_PATH=/models/3dpqc_model.xml
 
   cv_model_layers:
     build: ./app/cv_models
