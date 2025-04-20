@@ -30,14 +30,15 @@ def detect_stringing():
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     small = cv2.resize(gray, (64, 128))
     feat = hog.compute(small).flatten().astype(np.float32)
-    _, resp = svm.predict(feat.reshape(1, -1))
-    is_def = bool(int(resp[0, 0]))
+    _, raw = svm.predict(feat.reshape(1, -1), flags=cv2.ml.STAT_MODEL_RAW_OUTPUT)
+    score = raw[0, 0]
+    conf = 1.0 / (1.0 + np.exp(-abs(score))) # confidence ∈ (0.5,1)
+    prob = 1.0 / (1.0 + np.exp(-score))      # >0.5 defect, <0.5 good
 
-    # (optional) you can set confidence=1.0 for now or implement raw‑score extraction later
     result = {
-        'defect': is_def,
-        'confidence': 1.0,
-        'message': "Potential stringing detected." if is_def else "No stringing detected."
+        'defect': score > 0,
+        'confidence': float(prob),
+        'message': "Potential stringing detected." if score > 0 else "No stringing detected."
     }
     return jsonify(result)
 
