@@ -1,10 +1,15 @@
 from flask import Blueprint, render_template, request, jsonify
-import os
+import os, requests
 
 main = Blueprint('main', __name__)
 
 UPLOAD_FOLDER = 'app/static/uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+DETECT_URL = os.environ.get(
+    'DETECT_URL',
+    'http://cv_model_stringing:5001/detect'
+)
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
