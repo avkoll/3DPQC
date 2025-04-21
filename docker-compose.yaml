@@ -24,16 +24,3 @@ services:
     environment:
       - MODEL_PATH=/models/3dpqc_multiclass.xml
 
-  cv_model_layers:
-    build: ./app/cv_models
-    container_name: cv_model_layers
-    command: python layer_quality.py
-    volumes:
-      - ./app/static/uploads:/uploads
-
-  cv_model_alignment:
-    build: ./app/cv_models
-    container_name: cv_model_alignment
-    command: python alignment.py
-    volumes:
-      - ./app/static/uploads:/uploads
