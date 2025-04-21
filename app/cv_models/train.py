@@ -89,8 +89,11 @@ def train_and_save():
     print("\n>>> Training 6‑way SVM…")
     svm = cv2.ml.SVM_create()
     svm.setType(cv2.ml.SVM_C_SVC)        # multi‑class classification
-    svm.setKernel(cv2.ml.SVM_LINEAR)    # try RBF or POLY if you like
-    svm.setC(0.1)
+    svm.setKernel(cv2.ml.SVM_RBF)    # try RBF or POLY if you like
+    svm.setC(1.0)                      # (0.01, 0.1, 1, 1.0, 10, 100)
+    svm.setGamma(0.001)                 # for RBF or POLY (0.00001, 0.001, 0.01, 0.1, 1)
+    #svm.setDegree(3)                  # for POLY only (2, 3, 4)
+    #svm.setCoef0(1.0)                 # for POLY and Sigmoid (-1, 0, 1)
     svm.train(X_train, cv2.ml.ROW_SAMPLE, y_train)
     print("    → Training complete")
 
