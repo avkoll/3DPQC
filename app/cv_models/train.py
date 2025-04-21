@@ -1,6 +1,7 @@
 import os
 import cv2
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 # 1) Paths
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +45,7 @@ def load_multiclass_dataset(root_dir, subset="train"):
                 prefix, name = entry.split(".", 1)
                 label = int(prefix)
             except ValueError:
-                print(f"⚠️  Skipping malformed folder name: {entry}")
+                print(f"Skipping malformed folder name: {entry}")
                 continue
 
             class_names[label] = name  # remember for inference / printing
@@ -54,7 +55,7 @@ def load_multiclass_dataset(root_dir, subset="train"):
                 img_path = os.path.join(entry_path, fname)
                 img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
                 if img is None:
-                    print(f"⚠️  Couldn’t read {img_path}, skipping")
+                    print(f"Couldn’t read {img_path}, skipping")
                     continue
 
                 img = cv2.resize(img, (64, 128))
@@ -79,12 +80,17 @@ def train_and_save():
     X_train, y_train, _ = load_multiclass_dataset(DATA_ROOT, "train")
     X_val, y_val, _ = load_multiclass_dataset(DATA_ROOT, "validate")
 
+    # applying feature scaling
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train).astype(np.float32)
+    X_val = scaler.transform(X_val).astype(np.float32)
+
     # 4) Train the multi‑class SVM
     print("\n>>> Training 6‑way SVM…")
     svm = cv2.ml.SVM_create()
     svm.setType(cv2.ml.SVM_C_SVC)        # multi‑class classification
     svm.setKernel(cv2.ml.SVM_LINEAR)    # try RBF or POLY if you like
-    svm.setC(1.0)
+    svm.setC(0.1)
     svm.train(X_train, cv2.ml.ROW_SAMPLE, y_train)
     print("    → Training complete")
 
