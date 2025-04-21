@@ -20,9 +20,9 @@ services:
       - "5001:5001"
     volumes:
       - ./app/static/uploads:/uploads
-      - ./models/3dpqc_model.xml:/models/3dpqc_model.xml:ro
+      - ./models/3dpqc_multiclass.xml:/models/3dpqc_multiclass.xml:ro
     environment:
-      - MODEL_PATH=/models/3dpqc_model.xml
+      - MODEL_PATH=/models/3dpqc_multiclass.xml
 
   cv_model_layers:
     build: ./app/cv_models
