@@ -2,7 +2,7 @@ FROM python:3.12-slim
 WORKDIR /cv_models
 
 # point at where we'll mount it
-ENV MODEL_PATH=/models/3dpqc_model.xml
+ENV MODEL_PATH=/models/3dpqc_multiclass.xml
 
 # system deps for OpenCV
 RUN apt-get update && apt-get install -y \

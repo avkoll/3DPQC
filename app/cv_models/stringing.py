@@ -5,45 +5,49 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-MODEL_PATH = os.environ.get("MODEL_PATH", "../models/3dpqc_model.xml")
+# 1) Point at your new multiclass model
+MODEL_PATH = os.environ.get("MODEL_PATH", "../models/3dpqc_multiclass.xml")
 svm        = cv2.ml.SVM_load(MODEL_PATH)
 hog        = cv2.HOGDescriptor()
 
-@app.route('/detect', methods=['POST'])
+# 2) Class names in the exact order used during training
+CLASS_NAMES = [
+    "OK",
+    "Cracks",
+    "Blobs",
+    "Spaghetti",
+    "Stringing",
+    "UnderExtrusion",
+]
 
-def detect_stringing():
+@app.route('/detect', methods=['POST'])
+def detect():
+    # 3) Basic upload boilerplate
     if 'image' not in request.files:
         return jsonify({'error': 'No image file received'}), 400
 
-    file = request.files['image']
-    file_bytes = file.read()
+    file_bytes = request.files['image'].read()
     npimg = np.frombuffer(file_bytes, np.uint8)
-    try:
-        img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
-        if img is None:
-            raise ValueError('Not image file')
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400
+    img   = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+    if img is None:
+        return jsonify({'error': 'Could not decode image'}), 400
 
+    # 4) Preprocess exactly as in training
+    gray  = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    small = cv2.resize(gray, (64,128))
+    feat  = hog.compute(small).flatten().astype(np.float32)
 
-    # convert to grayscale + resize exactly as in training
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    small = cv2.resize(gray, (64, 128))
-    feat = hog.compute(small).flatten().astype(np.float32)
-    _, raw = svm.predict(feat.reshape(1, -1), flags=cv2.ml.STAT_MODEL_RAW_OUTPUT)
-    score = raw[0, 0]
-    conf = 1.0 / (1.0 + np.exp(-abs(score))) # confidence ∈ (0.5,1)
-    prob = 1.0 / (1.0 + np.exp(-score))      # >0.5 defect, <0.5 good
+    # 5) Predict — returns the index of the winning class
+    _, resp    = svm.predict(feat.reshape(1, -1))
+    label_idx  = int(resp[0,0])
+    label_name = CLASS_NAMES[label_idx]
 
-    result = {
-        'defect': bool(score > 0),
-        'confidence': float(conf),
-        'probability': float(prob),
-        'message': "Potential stringing detected." if score > 0 else "No stringing detected."
-    }
-
-    return jsonify(result)
-
+    # 6) Return JSON
+    return jsonify({
+        'class_id':   label_idx,
+        'class_name': label_name,
+        'message':    f"Detected: {label_name}"
+    })
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5001)
