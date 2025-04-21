@@ -42,6 +42,8 @@ def detect():
     label_idx  = int(resp[0,0])
     label_name = CLASS_NAMES[label_idx]
 
+    print(f"Raw SVM response matrix: {resp}, selected label: {label_idx} ('{label_name}')")
+
     # 6) Return JSON
     return jsonify({
         'class_id':   label_idx,
