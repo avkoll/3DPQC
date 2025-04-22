@@ -20,7 +20,8 @@ services:
       - "5001:5001"
     volumes:
       - ./app/static/uploads:/uploads
-      - ./models/3dpqc_multiclass.xml:/models/3dpqc_multiclass.xml:ro
+      - ./models/3dpqc_multiclass.scaler.pkl:/models/3dpqc_multiclass.scaler.pkl:ro
+      - ./models/3dpqc_multiclass.svm.pkl:/models/3dpqc_multiclass.svm.pkl:ro
     environment:
       - MODEL_PATH=/models/3dpqc_multiclass.xml
 

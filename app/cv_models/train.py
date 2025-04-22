@@ -128,8 +128,8 @@ def train_and_save():
     random_search = RandomizedSearchCV(
         estimator=SVC(),
         param_distributions=param_dist,
-        n_iter=50,         # try 50 random combinations
-        cv=3,
+        n_iter=25,         # try 50 random combinations
+        cv=2,
         n_jobs=-1,
         verbose=2,
         random_state=42
