@@ -1,18 +1,23 @@
 import os, cv2, numpy as np
 from sklearn.preprocessing     import StandardScaler
-from sklearn.model_selection   import GridSearchCV
+from sklearn.model_selection   import GridSearchCV, RandomizedSearchCV
 from sklearn.svm               import SVC
 import joblib
 import albumentations as A
 from tensorflow.keras.applications.efficientnet import (
-    EfficientNetB0, preprocess_input
+    EfficientNetB1, preprocess_input
 )
 
 # Define your augmentation pipeline once, at top
-aug = A.Compose([A.Rotate(15), A.HorizontalFlip(), A.RandomBrightnessContrast(0.2,0.2)])
+aug = A.Compose([
+  A.Rotate(15),
+  A.HorizontalFlip(),
+  A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=10),
+  A.RandomBrightnessContrast(0.2, 0.2),
+])
 
-IMG_SIZE = 160   # bump up if you like 128→160 or 224
-extractor = EfficientNetB0(
+IMG_SIZE = 224   # bump up if you like 128→160 or 224
+extractor = EfficientNetB1(
     weights="imagenet",
     include_top=False,
     pooling="avg",
@@ -101,6 +106,7 @@ def load_multiclass_dataset(root_dir, subset="train", batch_size=32):
 
 
 def train_and_save():
+    # 1) Load & scale
     X_train, y_train, _ = load_multiclass_dataset(DATA_ROOT, "train")
     X_val,   y_val,   _ = load_multiclass_dataset(DATA_ROOT, "validate")
 
@@ -108,21 +114,39 @@ def train_and_save():
     X_train = scaler.fit_transform(X_train)
     X_val   = scaler.transform(X_val)
 
-    param_grid = {
-        "C": [0.01, 0.1, 1, 10, 100],
-        "gamma": [1 / IMG_SIZE ** 2, 1e-3, 1e-2, 1e-1],  # or 1 / feature_dim
-        "kernel": ["rbf"]
+    # 2) Define your hyperparameter space
+    param_dist = {
+        "kernel":       ["rbf", "poly", "sigmoid"],
+        "C":            [1e-3, 1e-2, 1e-1, 1, 10, 100],
+        "gamma":        [1/X_train.shape[1], 1e-4, 1e-3, 1e-2, 1e-1],
+        "degree":       [2, 3, 4],           # only for poly/sigmoid
+        "coef0":        [0.0, 0.1, 1.0],     # only for poly/sigmoid
+        "class_weight": [None, "balanced"],
     }
-    grid = GridSearchCV(SVC(), param_grid, cv=3, n_jobs=-1, verbose=1)
-    grid.fit(X_train, y_train)
 
-    svm = grid.best_estimator_
+    # 3) Run RandomizedSearchCV instead of GridSearchCV
+    random_search = RandomizedSearchCV(
+        estimator=SVC(),
+        param_distributions=param_dist,
+        n_iter=50,         # try 50 random combinations
+        cv=3,
+        n_jobs=-1,
+        verbose=2,
+        random_state=42
+    )
+    random_search.fit(X_train, y_train)
+
+    print("Best params:", random_search.best_params_)
+    svm = random_search.best_estimator_
+
+    # 4) Validate
     acc = (svm.predict(X_val) == y_val).mean()
-    print(f"Validation accuracy: {acc * 100:.2f}%")
+    print(f"Validation accuracy: {acc*100:.2f}%")
 
+    # 5) Save scaler & model
     os.makedirs(os.path.dirname(MODEL_OUT), exist_ok=True)
     joblib.dump(scaler, MODEL_OUT.replace(".xml", ".scaler.pkl"))
-    joblib.dump(svm, MODEL_OUT.replace(".xml", ".svm.pkl"))
+    joblib.dump(svm,     MODEL_OUT.replace(".xml", ".svm.pkl"))
     print("Models saved")
 
 if __name__ == "__main__":
