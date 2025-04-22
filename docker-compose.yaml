@@ -9,8 +9,6 @@ services:
       - .:/app
     depends_on:
       - cv_model_stringing
-      - cv_model_layers
-      - cv_model_alignment
 
   cv_model_stringing:
     build: ./app/cv_models
