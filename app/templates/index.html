@@ -6,15 +6,31 @@
 </head>
 <body>
     <h1>Upload Your 3D Print Image</h1>
-    <form method="post" enctype="multipart/form-data">
+
+    <!-- The form now submits directly to /analyze -->
+    <form action="{{ url_for('main.analyze') }}" method="post" enctype="multipart/form-data">
         <input type="file" name="image" required>
         <button type="submit">Analyze</button>
-</form>
-</body>
+    </form>
 
-<body>
-    <h1>Hello2</h1>
+    {% if result %}
+        {% if result.error %}
+            <p style="color:red;">
+                <strong>Error:</strong> {{ result.error }}<br>
+                <small>{{ result.details }}</small>
+            </p>
+        {% else %}
+            <h2>Analysis Result</h2>
+            <ul>
+                <li><strong>Defect:</strong> {{ result.defect }}</li>
+                <li><strong>Confidence:</strong> {{ result.confidence }}</li>
+                <li><strong>Message:</strong> {{ result.message }}</li>
+            </ul>
+
+            <h3>Preview</h3>
+            <img src="{{ url_for('static', filename='uploads/' ~ filename) }}"
+                 alt="Uploaded image" style="max-width:300px;">
+        {% endif %}
+    {% endif %}
 </body>
 </html>
-
-
