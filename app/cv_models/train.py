@@ -116,20 +116,20 @@ def train_and_save():
 
     # 2) Define your hyperparameter space
     param_dist = {
-        "kernel":       ["rbf", "poly", "sigmoid"],
-        "C":            [1e-3, 1e-2, 1e-1, 1, 10, 100],
-        "gamma":        [1/X_train.shape[1], 1e-4, 1e-3, 1e-2, 1e-1],
-        "degree":       [2, 3, 4],           # only for poly/sigmoid
-        "coef0":        [0.0, 0.1, 1.0],     # only for poly/sigmoid
-        "class_weight": [None, "balanced"],
+        "kernel":       ["rbf"], #, "poly", "sigmoid"
+        "C":            [100],
+        "gamma":        [0.001],
+        "degree":       [3, 4],           # only for poly/sigmoid
+        "coef0":        [1.0],     # only for poly/sigmoid
+        "class_weight": ["balanced"],
     }
 
     # 3) Run RandomizedSearchCV instead of GridSearchCV
     random_search = RandomizedSearchCV(
-        estimator=SVC(),
+        estimator=SVC(probability=True),
         param_distributions=param_dist,
-        n_iter=25,         # try 50 random combinations
-        cv=2,
+        n_iter=5,         # try x random combinations
+        cv=3,
         n_jobs=-1,
         verbose=2,
         random_state=42
