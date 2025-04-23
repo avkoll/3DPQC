@@ -22,8 +22,6 @@ Each component of the project, including the Flask backend and individual CV mod
 dataset retrieved from https://www.kaggle.com/datasets/tangyiqi/3d-print-error-images-after-data-enhancement
 
 
-
-
 svm_rbf c = 1.0, gamma = 0.001 ---> 33% accuracy
 
 with TF:
