@@ -9,8 +9,6 @@ services:
       - .:/app
     depends_on:
       - cv_model_stringing
-      - cv_model_layers
-      - cv_model_alignment
 
   cv_model_stringing:
     build: ./app/cv_models
@@ -20,7 +18,7 @@ services:
       - "5001:5001"
     volumes:
       - ./app/static/uploads:/uploads
-      - ./models/3dpqc_multiclass.xml:/models/3dpqc_multiclass.xml:ro
+      - ./models:/models:ro
     environment:
-      - MODEL_PATH=/models/3dpqc_multiclass.xml
+      - MODEL_PATH=/models/
 

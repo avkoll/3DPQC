@@ -1,3 +1,11 @@
 Flask==3.1.0
 opencv-python==4.11.0.86
-numpy==2.2.4
+
+# Must exactly match your training stack’s NumPy & scikit‑learn,
+# so that joblib.load(...) can unpickle your scaler+SVM:
+numpy==1.26.1
+scikit-learn==1.6.1
+joblib==1.4.2
+
+# To run your EfficientNetB1 extractor:
+tensorflow==2.19.0

@@ -25,3 +25,12 @@ dataset retrieved from https://www.kaggle.com/datasets/tangyiqi/3d-print-error-i
 
 
 svm_rbf c = 1.0, gamma = 0.001 ---> 33% accuracy
+
+with TF:
+    Best params: {'kernel': 'rbf', 'gamma': 0.00078125, 'degree': 3, 'coef0': 1.0, 'class_weight': 'balanced', 'C': 100}
+    Validation accuracy: 64.27%
+
+
+
+This model only detects one flaw at a time, My original idea that used seperate models for different
+flaws would be able to identify more than one flaw in each image. 

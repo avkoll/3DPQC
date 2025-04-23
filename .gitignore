@@ -1,6 +1,6 @@
-/models/
 /app/cv_models/dataset/
 /app/models/
 .idea/
 __pychache__/
 app/static/uploads/
+/models/
