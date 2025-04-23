@@ -85,23 +85,35 @@
     </form>
 
     {% if result %}
-        {% if result.error %}
-            <div class="result" style="color: red;">
-                <strong>Error:</strong> {{ result.error }}<br>
-                <small>{{ result.details }}</small>
-            </div>
-        {% else %}
-            <div class="result">
-                <h2>Analysis Result</h2>
-                <p><strong>Defect:</strong> {{ result.defect }}</p>
-                <p><strong>Confidence:</strong> {{ result.confidence }}</p>
-                <p><strong>Message:</strong> {{ result.message }}</p>
+    {% if result.error %}
+        <div class="result" style="color: red;">
+            <strong>Error:</strong> {{ result.error }}<br>
+            <small>{{ result.details }}</small>
+        </div>
+    {% else %}
+        <div class="result">
+            <h2>Analysis Result</h2>
+            <p><strong>Class ID:</strong> {{ result.class_id }}</p>
+            <p><strong>Class Name:</strong> {{ result.class_name }}</p>
+            <p><strong>Confidence:</strong> {{ "%.2f" | format(result.confidence * 100) }}%</p>
+            <p><strong>Message:</strong> {{ result.message }}</p>
 
-                <h3>Preview</h3>
-                <img src="{{ url_for('static', filename='uploads/' ~ filename) }}" class="preview-img" alt="Uploaded image">
-            </div>
-        {% endif %}
+            <h3>Top Predictions</h3>
+            <ul>
+                {% for prediction in result.top_predictions %}
+                    <li>
+                        <strong>{{ prediction.class_name }}</strong>
+                        (ID: {{ prediction.class_id }}) -
+                        Confidence: {{ "%.2f" | format(prediction.confidence * 100) }}%
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <h3>Preview</h3>
+            <img src="{{ url_for('static', filename='uploads/' ~ filename) }}" class="preview-img" alt="Uploaded image">
+        </div>
     {% endif %}
+{% endif %}
 
     <div class="defect-section">
         <h3>OK</h3>

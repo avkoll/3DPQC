@@ -52,13 +52,23 @@ def detect():
 
     # 4) Scale + predict
     feat        = scaler.transform(emb.reshape(1, -1))
-    label_idx   = int(svm.predict(feat)[0])
-    label_name  = CLASS_NAMES[label_idx]
+    probabilities = svm.predict_proba(feat)[0]
+    label_idx = int(np.argmax(probabilities))
+    confidence = float(probabilities[label_idx])
+    label_name = CLASS_NAMES[label_idx]
+
+    top_indices = np.argsort(probabilities)[::-1][:3]
+    top_classes = [
+        {"class_id": int(i), "class_name": CLASS_NAMES[i], "confidence": float(probabilities[i])}
+        for i in top_indices
+    ]
 
     return jsonify({
-        'class_id':   label_idx,
+        'class_id': label_idx,
         'class_name': label_name,
-        'message':    f"Detected: {label_name}"
+        'confidence': confidence,
+        'message': f"Detected: {label_name}",
+        'top_predictions': top_classes
     })
 
 if __name__ == '__main__':
