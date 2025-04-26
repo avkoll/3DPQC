@@ -80,6 +80,13 @@
 <body>
 <div class="container">
     <h1>3D Print Quality Checker</h1>
+    <h2>How to use this tool:</h2>
+    <ul>
+        <li>1. Click browse and upload the image you want analyzed. (closeups of the object work best)</li>
+        <li>2. Click analyze.</li>
+        <li>3. The results are shown below.</li>
+        <li>4. If the confidence is less than 65% then consider the next two top predictions.</li>
+    </ul>
 
     <form action="{{ url_for('main.analyze') }}" method="post" enctype="multipart/form-data">
         <input type="file" name="image" required>
@@ -95,8 +102,8 @@
     {% else %}
         <div class="result">
             <h2>Analysis Result</h2>
-            <p><strong>Class ID:</strong> {{ result.class_id }}</p>
-            <p><strong>Class Name:</strong> {{ result.class_name }}</p>
+            <p><strong>Flaw ID:</strong> {{ result.class_id }}</p>
+            <p><strong>Flaw Name:</strong> {{ result.class_name }}</p>
             <p><strong>Confidence:</strong> {{ "%.2f" | format(result.confidence * 100) }}%</p>
             <p><strong>Message:</strong> {{ result.message }}</p>
 
@@ -111,14 +118,14 @@
                 {% endfor %}
             </ul>
 
-            <h3>Preview</h3>
+            <h3>Image Uploaded</h3>
             <img src="{{ url_for('static', filename='uploads/' ~ filename) }}" class="preview-img" alt="Uploaded image">
         </div>
     {% endif %}
 {% endif %}
-
+    <h2>Classifications and suggestions to fix.</h2>
     <div class="defect-section">
-        <h3>OK</h3>
+        <h3>0. OK</h3>
         <p>
             The print shows no visible defects. Layers are consistent, and there
             are no signs of warping, stringing, or other common issues.
@@ -135,7 +142,7 @@
     </div>
 
     <div class="defect-section">
-        <h3>Cracks</h3>
+        <h3>1. Cracks</h3>
         <p>
             Cracks or splits between layers, typically seen in taller prints, result from poor layer adhesion due to cooling or temperature issues.
         </p>
@@ -146,14 +153,13 @@
             <li>Use an enclosure to maintain ambient temperature and prevent drafts.</li>
             <li>Slow down print speed to allow better layer adhesion.</li>
         </ul>
-        <p>Placeholder suggestions to fix cracks in prints.</p>
         <img src="{{ url_for('static', filename='flawImages/Cracks1.jpg') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/Cracks2.jpg') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/Cracks3.png') }}" class="example-img">
     </div>
 
     <div class="defect-section">
-        <h3>Blobs</h3>
+        <h3>2. Blobs</h3>
         <p>
             Small raised bumps or excess material on the print surface caused by inconsistent extrusion or oozing.
         </p>
@@ -164,14 +170,13 @@
             <li>Calibrate the extruder to ensure proper filament flow.</li>
             <li>Dry filament to avoid moisture-induced extrusion issues.</li>
         </ul>
-        <p>Placeholder suggestions to fix blobs in prints.</p>
         <img src="{{ url_for('static', filename='flawImages/Blobs1.jpg') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/Blobs2.jpg') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/Blobs3.png') }}" class="example-img">
     </div>
 
     <div class="defect-section">
-        <h3>Spaghetti</h3>
+        <h3>3. Spaghetti</h3>
         <p>
             A mess of filament strands occurs when a print detaches from the bed mid-print, but extrusion continues.
         </p>
@@ -182,14 +187,13 @@
             <li>Adjust first layer settings for better adhesion (height, speed).</li>
             <li>Check Z-offset to ensure the nozzle is not too far from the bed.</li>
         </ul>
-        <p>Placeholder suggestions to fix spaghetti failures.</p>
         <img src="{{ url_for('static', filename='flawImages/Spaghetti1.jpeg') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/Spaghetti2.jpeg') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/Spaghetti3.jpeg') }}" class="example-img">
     </div>
 
     <div class="defect-section">
-        <h3>Stringing</h3>
+        <h3>4. Stringing</h3>
         <p>
             Thin strands of filament, like spider webs, appear between parts of the print due to filament oozing during travel moves.
         </p>
@@ -200,14 +204,13 @@
             <li>Lower nozzle temperature to reduce filament flow during moves.</li>
             <li>Ensure filament is dry to prevent moisture-related issues.</li>
         </ul>
-        <p>Placeholder suggestions to fix stringing.</p>
         <img src="{{ url_for('static', filename='flawImages/Stringing1.jpg') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/Stringing2.jpg') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/Stringing3.png') }}" class="example-img">
     </div>
 
     <div class="defect-section">
-        <h3>UnderExtrusion</h3>
+        <h3>5. UnderExtrusion</h3>
         <p>
             Parts of the print have gaps, thin lines, or missing layers due to insufficient filament extrusion.
         </p>
@@ -219,7 +222,6 @@
             <li>Ensure filament diameter settings match the actual filament used.</li>
             <li>Raise nozzle temperature to improve filament flow.</li>
         </ul>
-        <p>Placeholder suggestions to fix under-extrusion.</p>
         <img src="{{ url_for('static', filename='flawImages/UnderExtrusion1.jpg') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/UnderExtrusion2.png') }}" class="example-img">
         <img src="{{ url_for('static', filename='flawImages/UnderExtrusion3.jpg') }}" class="example-img">
