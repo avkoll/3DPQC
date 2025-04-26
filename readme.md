@@ -1,34 +1,54 @@
 # 3D Print Quality Checker
 
-This project is developed as my capstone project aimed at providing an easy-to-use tool for hobbyists, makers, and small businesses to quickly identify common defects in their 3D printed objects. The tool is designed to be simple and accessible directly through a web browser.
+This project was developed as my capstone project, designed to offer an easy-to-use tool for hobbyists, makers, and small businesses to quickly identify common defects in their 3D printed objects. The tool is accessible directly through a web browser, making defect detection simple and convenient.
 
 ## Project Goal
-The primary goal of this tool is to enable users to upload images of their completed 3D prints and receive immediate analysis highlighting any defects such as uneven layers, stringing, alignment issues, and other common printing errors.
 
-## How it Works
-- Users access the tool via a simple web interface.
-- Images of finished prints are uploaded for analysis.
-- Computer vision (CV) models, each specialized in detecting specific types of defects, analyze the images.
-- Feedback is provided directly in the browser, clearly indicating any detected flaws.
+The primary goal of this tool is to allow users to upload images of their completed 3D prints and receive immediate analysis highlighting any defects such as:
+
+- Uneven layers  
+- Stringing  
+- Alignment issues  
+- Other common 3D printing errors  
+
+The aim is to help users improve print quality without requiring specialized knowledge in machine learning or computer vision.
+
+## How It Works
+
+1. Users access the tool via a simple web interface.
+2. They upload images of their finished prints.
+3. Computer vision (CV) models, trained to detect specific types of defects, analyze the images.
+4. The tool provides feedback directly in the browser, clearly indicating any detected flaws.
 
 ## Technology Stack
-- Python (Flask)
-- OpenCV
-- Docker and Docker-Compose
 
-Each component of the project, including the Flask backend and individual CV models, runs in its own Docker container, managed with Docker Compose to ensure easy deployment and scalability.
+- **Python (Flask)** – Backend server to handle image uploads and manage model inference.  
+- **OpenCV** – Image preprocessing and manipulation.  
+- **TensorFlow** – Training and evaluation of machine learning models.  
+- **Docker & Docker Compose** – Each component of the project (Flask backend and individual CV models) runs in its own Docker container, allowing for easy deployment and scalability.
 
+## Model Training & Performance
 
-dataset retrieved from https://www.kaggle.com/datasets/tangyiqi/3d-print-error-images-after-data-enhancement
+- **Dataset**:  
+  The model was trained using a dataset retrieved from [this Kaggle repository](https://www.kaggle.com/datasets/tangyiqi/3d-print-error-images-after-data-enhancement).
 
+- **Initial Model (SVM with RBF kernel)**:  
+  - Parameters: `C = 1.0`, `gamma = 0.001`  
+  - Accuracy: ~23%
 
-svm_rbf c = 1.0, gamma = 0.001 ---> 33% accuracy
+- **Current Model (TensorFlow-based)**:  
+  - Best Parameters:  
+    - Kernel: `rbf`  
+    - Gamma: `0.00078125`  
+    - Degree: `3`  
+    - Coef0: `1.0`  
+    - Class Weight: `balanced`  
+    - C: `100`  
+  - Validation Accuracy: **64.27%**
 
-with TF:
-    Best params: {'kernel': 'rbf', 'gamma': 0.00078125, 'degree': 3, 'coef0': 1.0, 'class_weight': 'balanced', 'C': 100}
-    Validation accuracy: 64.27%
+The trained model is available in the release tab of this repository.
 
+## Limitations & Future Work
 
-
-This model only detects one flaw at a time, My original idea that used seperate models for different
-flaws would be able to identify more than one flaw in each image. 
+The current model is designed to detect **one flaw at a time**.  
+My original concept involved **separate models for different types of defects**, which would allow the system to identify **multiple flaws within a single image**. This approach remains a potential area for future improvement, as it could increase both the granularity and accuracy of defect detection.

@@ -68,7 +68,9 @@
         }
 
         .example-img {
-            max-width: 100px;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
             margin-right: 10px;
             border-radius: 4px;
             display: inline-block;
@@ -117,38 +119,110 @@
 
     <div class="defect-section">
         <h3>OK</h3>
-        <p>No noticeable defects detected. Good job!</p>
-        <img src="path/to/ok_example.jpg" class="example-img">
+        <p>
+            The print shows no visible defects. Layers are consistent, and there
+            are no signs of warping, stringing, or other common issues.
+        </p>
+        <h4>Suggestions:</h4>
+        <ul>
+            <li>No adjustments needed.</li>
+            <li>Keep with normal printer maintenance.</li>
+            <li>Keep filament in a dry environment.</li>
+        </ul>
+        <img src="{{ url_for('static', filename='flawImages/OK1.jpg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/OK2.jpg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/OK3.jpg') }}" class="example-img">
     </div>
 
     <div class="defect-section">
         <h3>Cracks</h3>
+        <p>
+            Cracks or splits between layers, typically seen in taller prints, result from poor layer adhesion due to cooling or temperature issues.
+        </p>
+        <h4>Suggestions:</h4>
+        <ul>
+            <li>Increase nozzle or bed temperature to improve layer bonding.</li>
+            <li>Reduce cooling fan speed, especially for materials like ABS.</li>
+            <li>Use an enclosure to maintain ambient temperature and prevent drafts.</li>
+            <li>Slow down print speed to allow better layer adhesion.</li>
+        </ul>
         <p>Placeholder suggestions to fix cracks in prints.</p>
-        <img src="path/to/cracks_example.jpg" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Cracks1.jpg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Cracks2.jpg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Cracks3.png') }}" class="example-img">
     </div>
 
     <div class="defect-section">
         <h3>Blobs</h3>
+        <p>
+            Small raised bumps or excess material on the print surface caused by inconsistent extrusion or oozing.
+        </p>
+        <h4>Suggestions:</h4>
+        <ul>
+            <li>Adjust retraction distance and speed to prevent oozing.</li>
+            <li>Lower nozzle temperature to reduce filament dripping.</li>
+            <li>Calibrate the extruder to ensure proper filament flow.</li>
+            <li>Dry filament to avoid moisture-induced extrusion issues.</li>
+        </ul>
         <p>Placeholder suggestions to fix blobs in prints.</p>
-        <img src="path/to/blobs_example.jpg" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Blobs1.jpg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Blobs2.jpg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Blobs3.png') }}" class="example-img">
     </div>
 
     <div class="defect-section">
         <h3>Spaghetti</h3>
+        <p>
+            A mess of filament strands occurs when a print detaches from the bed mid-print, but extrusion continues.
+        </p>
+        <h4>Suggestions:</h4>
+        <ul>
+            <li>Improve bed adhesion with glue stick, painter’s tape, or textured surfaces.</li>
+            <li>Ensure the bed is level and the nozzle height is correctly set.</li>
+            <li>Adjust first layer settings for better adhesion (height, speed).</li>
+            <li>Check Z-offset to ensure the nozzle is not too far from the bed.</li>
+        </ul>
         <p>Placeholder suggestions to fix spaghetti failures.</p>
-        <img src="path/to/spaghetti_example.jpg" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Spaghetti1.jpeg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Spaghetti2.jpeg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Spaghetti3.jpeg') }}" class="example-img">
     </div>
 
     <div class="defect-section">
         <h3>Stringing</h3>
+        <p>
+            Thin strands of filament, like spider webs, appear between parts of the print due to filament oozing during travel moves.
+        </p>
+        <h4>Suggestions:</h4>
+        <ul>
+            <li>Increase retraction distance and speed to reduce oozing.</li>
+            <li>Raise travel speed to minimize time between print areas.</li>
+            <li>Lower nozzle temperature to reduce filament flow during moves.</li>
+            <li>Ensure filament is dry to prevent moisture-related issues.</li>
+        </ul>
         <p>Placeholder suggestions to fix stringing.</p>
-        <img src="path/to/stringing_example.jpg" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Stringing1.jpg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Stringing2.jpg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/Stringing3.png') }}" class="example-img">
     </div>
 
     <div class="defect-section">
         <h3>UnderExtrusion</h3>
+        <p>
+            Parts of the print have gaps, thin lines, or missing layers due to insufficient filament extrusion.
+        </p>
+        <h4>Suggestions:</h4>
+        <ul>
+            <li>Check and clean the nozzle to clear partial clogs.</li>
+            <li>Calibrate the extruder steps/mm for accurate filament feeding.</li>
+            <li>Increase flow rate (extrusion multiplier) in your slicer.</li>
+            <li>Ensure filament diameter settings match the actual filament used.</li>
+            <li>Raise nozzle temperature to improve filament flow.</li>
+        </ul>
         <p>Placeholder suggestions to fix under-extrusion.</p>
-        <img src="path/to/underextrusion_example.jpg" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/UnderExtrusion1.jpg') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/UnderExtrusion2.png') }}" class="example-img">
+        <img src="{{ url_for('static', filename='flawImages/UnderExtrusion3.jpg') }}" class="example-img">
     </div>
 
 </div>
