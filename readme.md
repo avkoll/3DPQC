@@ -13,6 +13,15 @@ The primary goal of this tool is to allow users to upload images of their comple
 
 The aim is to help users improve print quality without requiring specialized knowledge in machine learning or computer vision.
 
+## Installation
+1. Download Docker or Docker-Desktop
+2. Clone repository to your pc
+3. Download the models from [releases](https://github.com/avkoll/3DPQC/releases/tag/model_binariesV1.0) and unzip the files into the /models directory of the project.
+4. Start docker
+5. Navigate to project root in commandline and type: docker-compose build (This may take a while.)
+6. Once that is done run: docker-compose up
+7. Navigate to http://127.0.0.1:5000 in your browser
+
 ## How It Works
 
 1. Users access the tool via a simple web interface.
