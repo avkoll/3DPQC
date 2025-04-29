@@ -2,6 +2,7 @@
 
 This project was developed as my capstone project, designed to offer an easy-to-use tool for hobbyists, makers, and small businesses to quickly identify common defects in their 3D printed objects. The tool is accessible directly through a web browser, making defect detection simple and convenient.
 
+Some of the files were partly AI generated and edited by me.
 ## Project Goal
 
 The primary goal of this tool is to allow users to upload images of their completed 3D prints and receive immediate analysis highlighting any defects such as:
